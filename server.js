@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const request = require('request')
 const axios = require('axios')
 const app = express()
-const token = 'EAAXEcK9g0skBAJposuJFuFuc8qGPMLpZA2C848sWZBwRFCfjjdvMRGNd9DSasHHVgdadjRBZCzYgrYDa1FxTVzlDZCSCHyBhHk13nasaVd2JN31vh5m1Kk9uVBXxJqD8m3o41yUuAmAL4d1vX7Dn5vQqJObFY78ZC1PjdNOBG2AZDZD'
+require('dotenv').config()
 app.set('port', (process.env.PORT || 5000))
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
@@ -37,7 +37,7 @@ app.post('/webhook/', function (req, res) {
     }
     if (event.postback) {
       let text = JSON.stringify(event.postback)
-      sendTextMessage(sender, 'Postback received: ' + text.substring(0, 200), token)
+      sendTextMessage(sender, 'Postback received: ' + text.substring(0, 200), process.env.token)
       continue
     }
   }
@@ -48,7 +48,7 @@ function sendTextMessage (sender, text) {
   let messageData = { text: text }
   request({
     url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token: token},
+    qs: {access_token: process.env.token},
     method: 'POST',
     json: {
       recipient: {id: sender},
@@ -97,7 +97,7 @@ function sendGenericMessage (sender) {
   }
   request({
     url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token: token},
+    qs: {access_token: process.env.token},
     method: 'POST',
     json: {
       recipient: {id: sender},
